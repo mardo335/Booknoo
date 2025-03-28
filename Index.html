@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookNook - Votre Boutique d'Ebooks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#4F4F4F',
+                        accent: '#6366F1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .ebook-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .ebook-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .dark body {
+            background-color: #181818;
+            color: #e5e5e5;
+        }
+        .dark .card-bg {
+            background-color: #262626;
+        }
+        .dark .sidebar {
+            background-color: #222222;
+        }
+        .dark input, .dark textarea, .dark select {
+            background-color: #2e2e2e;
+            color: #e5e5e5;
+            border-color: #3e3e3e;
+        }
+        .dark .text-gray-700 {
+            color: #e0e0e0;
+        }
+        .dark .text-gray-600 {
+            color: #bfbfbf;
+        }
+        .dark .text-gray-900 {
+            color: #f5f5f5;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-full transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <h1 class="text-2xl font-bold text-primary">BookNook</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="cartButton" class="relative p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button id="themeToggle" class="p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Home page -->
+        <div id="homePage" class="fade-in">
+            <section class="mb-12">
+                <div class="bg-primary text-white rounded-lg p-8 shadow-lg">
+                    <h2 class="text-3xl font-bold mb-4">Bienvenue sur BookNook</h2>
+                    <p class="text-lg mb-6">Découvrez notre sélection d'ebooks de qualité pour enrichir votre bibliothèque numérique.</p>
+                    <button id="browseButton" class="bg-white text-primary px-6 py-2 rounded-md font-semibold hover:bg-gray-100 transition duration-300">
+                        Parcourir le catalogue
+                    </button>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Catégories populaires</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="category-card bg-blue-100 dark:bg-blue-900 p-4 rounded-lg text-center cursor-pointer" data-category="fiction">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-600 dark:text-blue-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Fiction</h3>
+                    </div>
+                    <div class="category-card bg-green-100 dark:bg-green-900 p-4 rounded-lg text-center cursor-pointer" data-category="business">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-green-600 dark:text-green-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Business</h3>
+                    </div>
+                    <div class="category-card bg-purple-100 dark:bg-purple-900 p-4 rounded-lg text-center cursor-pointer" data-category="selfDev">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-purple-600 dark:text-purple-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Développement personnel</h3>
+                    </div>
+                    <div class="category-card bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center cursor-pointer" data-category="tech">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-yellow-600 dark:text-yellow-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Technologie</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Nos Meilleures Ventes</h2>
+                    <button id="viewAllButton" class="text-primary hover:underline font-medium">Voir tout</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featuredBooks">
+                    <!-- Livres populaires seront injectés ici par JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Shop page -->
+        <div id="shopPage" class="hidden fade-in">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Sidebar -->
+                <div class="md:w-1/4 lg:w-1/5">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sidebar">
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4">Catégories</h3>
+                        <ul class="space-y-2">
+                            <li>
+                                <button class="category-filter w-full text-left px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition" data-category="all">Tous les livres</button>
+                            </li>
+                            <li>
+                                <button class="category-filter w-full text-left px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition" data-category="fiction">Fiction</button>
+                            </li>
+                            <li>
+                                <button class="category-filter w-full text-left px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition" data-category="business">Business</button>
+                            </li>
+                            <li>
+                                <button class="category-filter w-full text-left px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition" data-category="selfDev">Développement personnel</button>
+                            </li>
+                            <li>
+                                <button class="category-filter w-full text-left px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition" data-category="tech">Technologie</button>
+                            </li>
+                        </ul>
+
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white mt-6 mb-4">Prix</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="price-all" type="radio" name="price" value="all" checked class="h-4 w-4 text-primary">
+                                <label for="price-all" class="ml-2 text-gray-700 dark:text-gray-200">Tous les prix</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="price-under-10" type="radio" name="price" value="under10" class="h-4 w-4 text-primary">
+                                <label for="price-under-10" class="ml-2 text-gray-700 dark:text-gray-200">Moins de 10€</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="price-10-20" type="radio" name="price" value="10-20" class="h-4 w-4 text-primary">
+                                <label for="price-10-20" class="ml-2 text-gray-700 dark:text-gray-200">10€ - 20€</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="price-over-20" type="radio" name="price" value="over20" class="h-4 w-4 text-primary">
+                                <label for="price-over-20" class="ml-2 text-gray-700 dark:text-gray-200">Plus de 20€</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main content -->
+                <div class="md:w-3/4 lg:w-4/5">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Catalogue d'Ebooks</h2>
+                        <div class="flex items-center justify-between">
+                            <p class="text-gray-600 dark:text-gray-400"><span id="productCount">0</span> ebooks trouvés</p>
+                            <div class="flex items-center">
+                                <label for="sort" class="mr-2 text-gray-700 dark:text-gray-200">Trier par:</label>
+                                <select id="sort" class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-base">
+                                    <option value="popular">Popularité</option>
+                                    <option value="priceAsc">Prix: croissant</option>
+                                    <option value="priceDesc">Prix: décroissant</option>
+                                    <option value="newest">Plus récents</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid">
+                        <!-- Products will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Detail Page -->
+        <div id="productPage" class="hidden fade-in">
+            <button id="backToShop" class="flex items-center text-primary mb-6 hover:underline">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Retour au catalogue
+            </button>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/3 p-6">
+                        <div id="productImage" class="aspect-w-3 aspect-h-4 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                            <!-- Image will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span id="productCategory" class="text-sm text-primary bg-primary bg-opacity-10 px-3 py-1 rounded-full">Catégorie</span>
+                                <h1 id="productTitle" class="text-2xl font-bold text-gray-900 dark:text-white mt-2">Titre du livre</h1>
+                                <p id="productAuthor" class="text-lg text-gray-600 dark:text-gray-400">Auteur</p>
+                            </div>
+                            <p id="productPrice" class="text-2xl font-bold text-primary">€0.00</p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Description</h3>
+                            <p id="productDescription" class="text-gray-600 dark:text-gray-400">Description du livre...</p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Détails</h3>
+                            <ul class="text-gray-600 dark:text-gray-400 space-y-1">
+                                <li>Format: <span id="productFormat">PDF, EPUB</span></li>
+                                <li>Pages: <span id="productPages">0</span></li>
+                                <li>Date de publication: <span id="productDate">01/01/2023</span></li>
+                                <li>Langue: <span id="productLanguage">Français</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-8 flex gap-4">
+                            <button id="addToCartBtn" class="bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-opacity-90 transition duration-300 flex-1">
+                                Ajouter au panier
+                            </button>
+                            <button id="buyNowBtn" class="bg-accent text-white px-6 py-3 rounded-md font-semibold hover:bg-opacity-90 transition duration-300 flex-1">
+                                Acheter maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cartPage" class="hidden fade-in">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Panier</h2>
+            
+            <div id="emptyCart" class="hidden text-center py-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Votre panier est vide</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Ajoutez des ebooks à votre panier pour les acheter</p>
+                <button id="continueShopping" class="bg-primary text-white px-6 py-2 rounded-md font-semibold hover:bg-opacity-90 transition duration-300">
+                    Continuer les achats
+                </button>
+            </div>
+            
+            <div id="cartContent" class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                <div class="border-b dark:border-gray-700 p-4">
+                    <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600 dark:text-gray-400">
+                        <div class="col-span-6">Produit</div>
+                        <div class="col-span-2 text-center">Prix</div>
+                        <div class="col-span-2 text-center">Quantité</div>
+                        <div class="col-span-2 text-right">Total</div>
+                    </div>
+                </div>
+                
+                <div id="cartItems">
+                    <!-- Cart items will be inserted here by JavaScript -->
+                </div>
+                
+                <div class="p-4 border-t dark:border-gray-700">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 dark:text-gray-400">Sous-total</span>
+                        <span id="subtotal" class="font-semibold text-gray-900 dark:text-white">€0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 dark:text-gray-400">TVA (20%)</span>
+                        <span id="tax" class="font-semibold text-gray-900 dark:text-white">€0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold">
+                        <span class="text-gray-800 dark:text-gray-200">Total</span>
+                        <span id="total" class="text-primary">€0.00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex gap-4">
+                <button id="backToShoppingBtn" class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                    Continuer les achats
+                </button>
+                <button id="proceedToCheckoutBtn" class="bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-opacity-90 transition duration-300 flex-1">
+                    Procéder au paiement
+                </button>
+            </div>
+        </div>
+
+        <!-- Checkout Page -->
+        <div id="checkoutPage" class="hidden fade-in">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Paiement</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informations client</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="firstName" class="block text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
+                                <input type="text" id="firstName" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                                <input type="text" id="lastName" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                <input type="email" id="email" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-gray-700 dark:text-gray-300 mb-1">Téléphone</label>
+                                <input type="tel" id="phone" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Méthode de paiement</h3>
+                        <div class="space-y-4">
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-md p-4">
+                                <div class="flex items-center mb-4">
+                                    <input id="payment-card" type="radio" name="payment-method" checked class="h-4 w-4 text-primary">
+                                    <label for="payment-card" class="ml-2 font-medium text-gray-700 dark:text-gray-300">Carte bancaire</label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="md:col-span-2">
+                                        <label for="cardNumber" class="block text-gray-700 dark:text-gray-300 mb-1">Numéro de carte</label>
+                                        <input type="text" id="cardNumber" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                                    </div>
+                                    <div>
+                                        <label for="cardExpiry" class="block text-gray-700 dark:text-gray-300 mb-1">Date d'expiration</label>
+                                        <input type="text" id="cardExpiry" placeholder="MM/AA" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                                    </div>
+                                    <div>
+                                        <label for="cardCvv" class="block text-gray-700 dark:text-gray-300 mb-1">CVV</label>
+                                        <input type="text" id="cardCvv" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-md p-4">
+                                <div class="flex items-center">
+                                    <input id="payment-paypal" type="radio" name="payment-method" class="h-4 w-4 text-primary">
+                                    <label for="payment-paypal" class="ml-2 font-medium text-gray-700 dark:text-gray-300">PayPal</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-1">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Résumé de commande</h3>
+                        
+                        <div id="checkoutItems" class="space-y-3 mb-4">
+                            <!-- Checkout items will be inserted here by JavaScript -->
+                        </div>
+                        
+                        <div class="border-t dark:border-gray-700 pt-4 mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-600 dark:text-gray-400">Sous-total</span>
+                                <span id="checkoutSubtotal" class="font-semibold text-gray-900 dark:text-white">€0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-600 dark:text-gray-400">TVA (20%)</span>
+                                <span id="checkoutTax" class="font-semibold text-gray-900 dark:text-white">€0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-lg font-bold mt-2">
+                                <span class="text-gray-800 dark:text-gray-200">Total</span>
+                                <span id="checkoutTotal" class="text-primary">€0.00</span>
+                            </div>
+                        </div>
+                        
+                        <button id="completeOrderBtn" class="w-full bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-opacity-90 transition duration-300 mt-6">
+                            Finaliser la commande
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Confirmation Page -->
+        <div id="confirmationPage" class="hidden fade-in text-center py-10">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md mx-auto">
+                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full inline-flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Commande confirmée!</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Merci pour votre achat. Un email de confirmation a été envoyé à votre adresse email.</p>
+                
+                <div class="border-t border-b dark:border-gray-700 py-4 my-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-700 dark:text-gray-300">Numéro de commande:</span>
+                        <span id="orderNumber" class="font-semibold text-gray-900 dark:text-white">#12345</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 dark:text-gray-300">Date:</span>
+                        <span id="orderDate" class="font-semibold text-gray-900 dark:text-white">01/01/2023</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Vous pouvez maintenant télécharger vos ebooks depuis votre email ou votre compte.</p>
+                
+                <button id="backToHomeBtn" class="bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-opacity-90 transition duration-300">
+                    Retour à l'accueil
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <h3 class="text-lg font-bold text-primary">BookNook</h3>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400">Votre librairie numérique pour découvrir des ebooks de qualité dans tous les domaines.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Liens utiles</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary transition">À propos</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary transition">Conditions d'utilisation</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary transition">Politique de confidentialité</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary transition">FAQs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-600 dark:text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            contact@booknook.fr
+                        </li>
+                        <li class="flex items-center text-gray-600 dark:text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            +33 1 23 45 67 89
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t dark:border-gray-700 mt-8 pt-6 text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2023 BookNook. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Detect dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Toggle dark mode
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Sample data for ebooks
+        const books = [
+            {
+                id: 1,
+                title: "L'Art de la Fiction",
+                author: "Jean Dupont",
+                price: 9.99,
+                category: "fiction",
+                image: "Book1",
+                description: "Un guide complet sur l'art d'écrire des fictions captivantes. Découvrez les techniques des grands auteurs pour créer des personnages mémorables et des intrigues fascinantes.",
+                format: "PDF, EPUB, MOBI",
+                pages: 286,
+                date: "15/03/2023",
+                language: "Français",
+                popular: true,
+                color: "#6366F1"
+            },
+            {
+                id: 2,
+                title: "Stratégies d'Entreprise Modernes",
+                author: "Sophie Martin",
+                price: 24.99,
+                category: "business",
+                image: "Book2",
+                description: "Explorez les stratégies d'entreprise les plus efficaces utilisées par les grandes entreprises d'aujourd'hui. Ce livre vous guidera à travers les décisions stratégiques cruciales pour réussir dans le monde des affaires actuel.",
+                format: "PDF, EPUB",
+                pages: 412,
+                date: "22/01/2023",
+                language: "Français",
+                popular: true,
+                color: "#10B981"
+            },
+            {
+                id: 3,
+                title: "Mindfulness au Quotidien",
+                author: "Marc Laurent",
+                price: 14.99,
+                category: "selfDev",
+                image: "Book3",
+                description: "Apprenez à intégrer la pleine conscience dans votre vie quotidienne pour réduire le stress et améliorer votre bien-être mental. Des exercices pratiques et des conseils faciles à suivre pour tous les niveaux.",
+                format: "PDF, EPUB",
+                pages: 198,
+                date: "07/05/2023",
+                language: "Français",
+                popular: true,
+                color: "#8B5CF6"
+            },
+            {
+                id: 4,
+                title: "Intelligence Artificielle: Fondements",
+                author: "Pierre Noel",
+                price: 29.99,
+                category: "tech",
+                image: "Book4",
+                description: "Une introduction complète aux concepts fondamentaux de l'intelligence artificielle. Ce livre couvre les algorithmes, le machine learning, et les applications pratiques de l'IA dans différents secteurs.",
+                format: "PDF",
+                pages: 345,
+                date: "12/02/2023",
+                language: "Français",
+                popular: true,
+                color: "#EC4899"
+            },
+            {
+                id: 5,
+                title: "Le Pouvoir des Habitudes",
+                author: "Claire Dubois",
+                price: 12.99,
+                category: "selfDev",
+                image: "Book5",
+                description: "Découvrez comment les habitudes façonnent notre vie et comment nous pouvons les transformer pour atteindre nos objectifs. Des études de cas inspirantes et des méthodes pratiques pour changer vos comportements.",
+                format: "PDF, EPUB",
+                pages: 272,
+                date: "30/04/2023",
+                language: "Français",
+                popular: false,
+                color: "#F59E0B"
+            },
+            {
+                id: 6,
+                title: "Programmation Python Avancée",
+                author: "Thomas Blanc",
+                price: 34.99,
+                category: "tech",
+                image: "Book6",
+                description: "Maîtrisez les concepts avancés de Python avec ce guide complet. Des techniques d'optimisation aux patterns de conception, ce livre est parfait pour les développeurs qui souhaitent approfondir leurs connaissances.",
+                format: "PDF",
+                pages: 468,
+                date: "18/06/2023",
+                language: "Français",
+                popular: false,
+                color: "#3B82F6"
+            },
+            {
+                id: 7,
+                title: "Marketing Digital: Stratégies Gagnantes",
+                author: "Emma Leroy",
+                price: 19.99,
+                category: "business",
+                image: "Book7",
+                description: "Un guide pratique sur les stratégies de marketing digital qui fonctionnent réellement. De l'optimisation SEO aux campagnes sur les réseaux sociaux, apprenez à atteindre votre audience cible efficacement.",
+                format: "PDF, EPUB",
+                pages: 310,
+                date: "05/03/2023",
+                language: "Français",
+                popular: false,
+                color: "#EF4444"
+            },
+            {
+                id: 8,
+                title: "L'Odyssée Stellaire",
+                author: "Henri Mercier",
+                price: 11.99,
+                category: "fiction",
+                image: "Book8",
+                description: "Une aventure épique de science-fiction qui vous transportera dans un univers où la technologie et la magie se rencontrent. Suivez le voyage interstellaire du capitaine Elios et de son équipage.",
+                format: "PDF, EPUB, MOBI",
+                pages: 392,
+                date: "14/07/2023",
+                language: "Français",
+                popular: false,
+                color: "#059669"
+            },
+            {
+                id: 9,
+                title: "Guide de l'Investisseur Débutant",
+                author: "Julien Petit",
+                price: 15.99,
+                category: "business",
+                image: "Book9",
+                description: "Apprenez les bases de l'investissement et comment faire fructifier votre épargne. Ce guide facile à suivre vous aidera à comprendre les marchés financiers et à prendre des décisions d'investissement éclairées.",
+                format: "PDF, EPUB",
+                pages: 226,
+                date: "02/01/2023",
+                language: "Français",
+                popular: false,
+                color: "#7C3AED"
+            },
+            {
+                id: 10,
+                title: "La Psychologie des Émotions",
+                author: "Aurélie Fontaine",
+                price: 18.99,
+                category: "selfDev",
+                image: "Book10",
+                description: "Une exploration approfondie de la façon dont les émotions influencent notre comportement et notre prise de décision. Découvrez des techniques pour mieux comprendre et gérer vos émotions au quotidien.",
+                format: "PDF, EPUB",
+                pages: 284,
+                date: "20/05/2023",
+                language: "Français",
+                popular: false,
+                color: "#0EA5E9"
+            },
+            {
+                id: 11,
+                title: "Cybersécurité Essentielle",
+                author: "Alexandre Robin",
+                price: 27.99,
+                category: "tech",
+                image: "Book11",
+                description: "Un guide complet sur la protection de vos données et systèmes contre les menaces numériques. Apprenez les meilleures pratiques en matière de cybersécurité et comment prévenir les attaques courantes.",
+                format: "PDF",
+                pages: 328,
+                date: "11/04/2023",
+                language: "Français",
+                popular: false,
+                color: "#4F46E5"
+            },
+            {
+                id: 12,
+                title: "Le Secret des Montagnes",
+                author: "Marie Deschamps",
+                price: 8.99,
+                category: "fiction",
+                image: "Book12",
+                description: "Un roman captivant qui se déroule dans un petit village montagnard où d'anciens secrets refont surface. Une histoire de mystère, d'amour et de rédemption qui vous tiendra en haleine jusqu'à la dernière page.",
+                format: "PDF, EPUB, MOBI",
+                pages: 356,
+                date: "09/06/2023",
+                language: "Français",
+                popular: false,
+                color: "#D946EF"
+            }
+        ];
+
+        // Generate book cover with canvas
+        function generateBookCover(title, author, color) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 420;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Random pattern for texture
+            ctx.globalAlpha = 0.05;
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 50 + 10;
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x, y, size, size);
+            }
+            ctx.globalAlpha = 1;
+            
+            // Draw title
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 24px Arial, sans-serif";
+            ctx.textAlign = "center";
+            
+            // Break title into multiple lines if necessary
+            const words = title.split(' ');
+            let lines = [];
+            let currentLine = '';
+            
+            for (let i = 0; i < words.length; i++) {
+                const testLine = currentLine + words[i] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > canvas.width - 40) {
+                    lines.push(currentLine);
+                    currentLine = words[i] + ' ';
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            lines.push(currentLine);
+            
+            // Draw each line of the title
+            const titleY = canvas.height / 2 - (lines.length - 1) * 30;
+            for (let i = 0; i < lines.length; i++) {
+                ctx.fillText(lines[i], canvas.width / 2, titleY + i * 35);
+            }
+            
+            // Draw author
+            ctx.font = "16px Arial, sans-serif";
+            ctx.fillText(`par ${author}`, canvas.width / 2, canvas.height - 50);
+            
+            return canvas.toDataURL();
+        }
+
+        // Global variables
+        let cart = [];
+        let currentProduct = null;
+        let currentPage = 'homePage';
+        
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('main > div').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+            currentPage = pageId;
+            
+            window.scrollTo(0, 0);
+        }
+        
+        // Initialize
+        function init() {
+            // Display featured books
+            const featuredBooksContainer = document.getElementById('featuredBooks');
+            books.filter(book => book.popular).forEach(book => {
+                const bookImage = generateBookCover(book.title, book.author, book.color);
+                const bookCard = document.createElement('div');
+                bookCard.className = 'ebook-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden';
+                bookCard.innerHTML = `
+                    <div class="aspect-w-3 aspect-h-4 bg-gray-200 dark:bg-gray-700">
+                        <img src="${bookImage}" alt="${book.title}" class="object-cover w-full h-56">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-medium text-primary bg-primary bg-opacity-10 px-2 py-1 rounded-full">${getCategoryName(book.category)}</span>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-2">${book.title}</h3>
+                        <p class="text-gray-600 dark:text-gray-400">${book.author}</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="font-bold text-gray-900 dark:text-white">€${book.price.toFixed(2)}</span>
+                            <button class="add-to-cart-btn bg-primary text-white px-3 py-1 rounded-md font-medium hover:bg-opacity-90 transition duration-300" data-id="${book.id}">
+                                + Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+                featuredBooksContainer.appendChild(bookCard);
+                
+                // Add click event to view product
+                bookCard.querySelector('img').addEventListener('click', () => {
+                    showProductDetail(book.id);
+                });
+                bookCard.querySelector('h3').addEventListener('click', () => {
+                    showProductDetail(book.id);
+                });
+                
+                // Add to cart button
+                bookCard.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addToCart(book.id);
+                });
+            });
+            
+            // Show all books in shop page
+            updateProductGrid(books);
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Event listeners
+            setupEventListeners();
+        }
+        
+        // Format category name
+        function getCategoryName(categoryId) {
+            const categories = {
+                fiction: 'Fiction',
+                business: 'Business',
+                selfDev: 'Développement personnel',
+                tech: 'Technologie'
+            };
+            return categories[categoryId] || categoryId;
+        }
+        
+        // Update product grid
+        function updateProductGrid(productsToDisplay) {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+            
+            if (productsToDisplay.length === 0) {
+                productGrid.innerHTML = '<p class="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">Aucun produit trouvé.</p>';
+                document.getElementById('productCount').textContent = '0';
+                return;
+            }
+            
+            document.getElementById('productCount').textContent = productsToDisplay.length;
+            
+            productsToDisplay.forEach(book => {
+                const bookImage = generateBookCover(book.title, book.author, book.color);
+                const productCard = document.createElement('div');
+                productCard.className = 'ebook-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden';
+                productCard.innerHTML = `
+                    <div class="aspect-w-3 aspect-h-4 bg-gray-200 dark:bg-gray-700">
+                        <img src="${bookImage}" alt="${book.title}" class="object-cover w-full h-56">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-medium text-primary bg-primary bg-opacity-10 px-2 py-1 rounded-full">${getCategoryName(book.category)}</span>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-2">${book.title}</h3>
+                        <p class="text-gray-600 dark:text-gray-400">${book.author}</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="font-bold text-gray-900 dark:text-white">€${book.price.toFixed(2)}</span>
+                            <button class="add-to-cart-btn bg-primary text-white px-3 py-1 rounded-md font-medium hover:bg-opacity-90 transition duration-300" data-id="${book.id}">
+                                + Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+                
+                // Add click event to view product
+                productCard.querySelector('img').addEventListener('click', () => {
+                    showProductDetail(book.id);
+                });
+                productCard.querySelector('h3').addEventListener('click', () => {
+                    showProductDetail(book.id);
+                });
+                
+                // Add to cart button
+                productCard.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addToCart(book.id);
+                });
+            });
+        }
+        
+        // Show product detail
+        function showProductDetail(bookId) {
+            currentProduct = books.find(book => book.id === bookId);
+            if (!currentProduct) return;
+            
+            const bookImage = generateBookCover(currentProduct.title, currentProduct.author, currentProduct.color);
+            
+            document.getElementById('productCategory').textContent = getCategoryName(currentProduct.category);
+            document.getElementById('productTitle').textContent = currentProduct.title;
+            document.getElementById('productAuthor').textContent = currentProduct.author;
+            document.getElementById('productPrice').textContent = `€${currentProduct.price.toFixed(2)}`;
+            document.getElementById('productDescription').textContent = currentProduct.description;
+            document.getElementById('productFormat').textContent = currentProduct.format;
+            document.getElementById('productPages').textContent = currentProduct.pages;
+            document.getElementById('productDate').textContent = currentProduct.date;
+            document.getElementById('productLanguage').textContent = currentProduct.language;
+            
+            const productImageContainer = document.getElementById('productImage');
+            productImageContainer.innerHTML = `<img src="${bookImage}" alt="${currentProduct.title}" class="object-contain w-full h-full">`;
+            
+            showPage('productPage');
+        }
+        
+        // Add to cart
+        function addToCart(bookId) {
+            const book = books.find(book => book.id === bookId);
+            if (!book) return;
+            
+            const existingItem = cart.find(item => item.id === bookId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: book.id,
+                    title: book.title,
+                    author: book.author,
+                    price: book.price,
+                    color: book.color,
+                    quantity: 1
+                });
+            }
+            
+            updateCartCount();
+            updateCartDisplay();
+            
+            // Show feedback
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out';
+            notification.textContent = `${book.title} ajouté au panier`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+        
+        // Update cart display
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                document.getElementById('emptyCart').classList.remove('hidden');
+                document.getElementById('cartContent').classList.add('hidden');
+                document.getElementById('proceedToCheckoutBtn').disabled = true;
+                document.getElementById('proceedToCheckoutBtn').classList.add('opacity-50');
+                return;
+            }
+            
+            document.getElementById('emptyCart').classList.add('hidden');
+            document.getElementById('cartContent').classList.remove('hidden');
+            document.getElementById('proceedToCheckoutBtn').disabled = false;
+            document.getElementById('proceedToCheckoutBtn').classList.remove('opacity-50');
+            
+            cart.forEach(item => {
+                const book = books.find(book => book.id === item.id);
+                const bookImage = generateBookCover(book.title, book.author, book.color);
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'p-4 border-b dark:border-gray-700';
+                cartItem.innerHTML = `
+                    <div class="grid grid-cols-12 gap-4 items-center">
+                        <div class="col-span-6 flex items-center">
+                            <div class="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden mr-3">
+                                <img src="${bookImage}" alt="${item.title}" class="object-cover w-full h-full">
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white">${item.title}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${item.author}</p>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <span class="text-gray-700 dark:text-gray-300">€${item.price.toFixed(2)}</span>
+                        </div>
+                        <div class="col-span-2 flex justify-center">
+                            <div class="flex items-center">
+                                <button class="cart-decrease text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                <span class="mx-2 w-8 text-center text-gray-700 dark:text-gray-300">${item.quantity}</span>
+                                <button class="cart-increase text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-right">
+                            <span class="font-medium text-gray-900 dark:text-white">€${(item.price * item.quantity).toFixed(2)}</span>
+                            <button class="cart-remove ml-2 text-red-500 hover:text-red-700" data-id="${item.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+                
+                // Event listeners for cart item buttons
+                cartItem.querySelector('.cart-decrease').addEventListener('click', () => {
+                    decreaseQuantity(item.id);
+                });
+                
+                cartItem.querySelector('.cart-increase').addEventListener('click', () => {
+                    increaseQuantity(item.id);
+                });
+                
+                cartItem.querySelector('.cart-remove').addEventListener('click', () => {
+                    removeFromCart(item.id);
+                });
+            });
+            
+            // Update totals
+            updateCartTotals();
+            updateCheckoutSummary();
+        }
+        
+        // Increase quantity
+        function increaseQuantity(bookId) {
+            const item = cart.find(item => item.id === bookId);
+            if (item) {
+                item.quantity += 1;
+                updateCartCount();
+                updateCartDisplay();
+            }
+        }
+        
+        // Decrease quantity
+        function decreaseQuantity(bookId) {
+            const item = cart.find(item => item.id === bookId);
+            if (item) {
+                item.quantity -= 1;
+                if (item.quantity <= 0) {
+                    removeFromCart(bookId);
+                } else {
+                    updateCartCount();
+                    updateCartDisplay();
+                }
+            }
+        }
+        
+        // Remove from cart
+        function removeFromCart(bookId) {
+            cart = cart.filter(item => item.id !== bookId);
+            updateCartCount();
+            updateCartDisplay();
+        }
+        
+        // Update cart totals
+        function updateCartTotals() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.2;
+            const total = subtotal + tax;
+            
+            document.getElementById('subtotal').textContent = `€${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `€${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `€${total.toFixed(2)}`;
+        }
+        
+        // Update checkout summary
+        function updateCheckoutSummary() {
+            const checkoutItemsContainer = document.getElementById('checkoutItems');
+            if (!checkoutItemsContainer) return;
+            
+            checkoutItemsContainer.innerHTML = '';
+            
+            cart.forEach(item => {
+                const checkoutItem = document.createElement('div');
+                checkoutItem.className = 'flex justify-between';
+                checkoutItem.innerHTML = `
+                    <div>
+                        <span class="font-medium text-gray-800 dark:text-gray-200">${item.title}</span>
+                        <span class="text-gray-600 dark:text-gray-400"> × ${item.quantity}</span>
+                    </div>
+                    <span class="text-gray-800 dark:text-gray-200">€${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                checkoutItemsContainer.appendChild(checkoutItem);
+            });
+            
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.2;
+            const total = subtotal + tax;
+            
+            document.getElementById('checkoutSubtotal').textContent = `€${subtotal.toFixed(2)}`;
+            document.getElementById('checkoutTax').textContent = `€${tax.toFixed(2)}`;
+            document.getElementById('checkoutTotal').textContent = `€${total.toFixed(2)}`;
+        }
+        
+        // Apply filters
+        function applyFilters() {
+            const category = document.querySelector('.category-filter.active')?.dataset.category || 'all';
+            const priceRange = document.querySelector('input[name="price"]:checked').value;
+            const sortBy = document.getElementById('sort').value;
+            
+            let filteredBooks = [...books];
+            
+            // Apply category filter
+            if (category !== 'all') {
+                filteredBooks = filteredBooks.filter(book => book.category === category);
+            }
+            
+            // Apply price filter
+            if (priceRange !== 'all') {
+                if (priceRange === 'under10') {
+                    filteredBooks = filteredBooks.filter(book => book.price < 10);
+                } else if (priceRange === '10-20') {
+                    filteredBooks = filteredBooks.filter(book => book.price >= 10 && book.price <= 20);
+                } else if (priceRange === 'over20') {
+                    filteredBooks = filteredBooks.filter(book => book.price > 20);
+                }
+            }
+            
+            // Apply sorting
+            if (sortBy === 'priceAsc') {
+                filteredBooks.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'priceDesc') {
+                filteredBooks.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'newest') {
+                filteredBooks.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+            } else if (sortBy === 'popular') {
+                filteredBooks.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+            }
+            
+            updateProductGrid(filteredBooks);
+        }
+        
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Navigation
+            document.getElementById('cartButton').addEventListener('click', () => {
+                showPage('cartPage');
+                updateCartDisplay();
+            });
+            
+            document.getElementById('browseButton').addEventListener('click', () => {
+                showPage('shopPage');
+            });
+            
+            document.getElementById('viewAllButton').addEventListener('click', () => {
+                showPage('shopPage');
+            });
+            
+            document.getElementById('backToShop').addEventListener('click', () => {
+                showPage('shopPage');
+            });
+            
+            document.getElementById('continueShopping').addEventListener('click', () => {
+                showPage('shopPage');
+            });
+            
+            document.getElementById('backToShoppingBtn').addEventListener('click', () => {
+                showPage('shopPage');
+            });
+            
+            document.getElementById('backToHomeBtn').addEventListener('click', () => {
+                showPage('homePage');
+                // Clear cart after order
+                cart = [];
+                updateCartCount();
+            });
+            
+            // Product detail
+            document.getElementById('addToCartBtn').addEventListener('click', () => {
+                if (currentProduct) {
+                    addToCart(currentProduct.id);
+                }
+            });
+            
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                if (currentProduct) {
+                    // Add to cart first
+                    const existingItem = cart.find(item => item.id === currentProduct.id);
+                    if (!existingItem) {
+                        addToCart(currentProduct.id);
+                    }
+                    // Go to checkout
+                    showPage('cartPage');
+                    updateCartDisplay();
+                }
+            });
+            
+            // Category cards
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    showPage('shopPage');
+                    
+                    // Set active category filter
+                    document.querySelectorAll('.category-filter').forEach(filter => {
+                        if (filter.dataset.category === category) {
+                            filter.classList.add('active', 'bg-primary', 'text-white');
+                        } else {
+                            filter.classList.remove('active', 'bg-primary', 'text-white');
+                        }
+                    });
+                    
+                    applyFilters();
+                });
+            });
+            
+            // Category filters
+            document.querySelectorAll('.category-filter').forEach(filter => {
+                filter.addEventListener('click', () => {
+                    document.querySelectorAll('.category-filter').forEach(f => {
+                        f.classList.remove('active', 'bg-primary', 'text-white');
+                    });
+                    filter.classList.add('active', 'bg-primary', 'text-white');
+                    applyFilters();
+                });
+            });
+            
+            // Set "All" as active by default
+            const allCategoryFilter = document.querySelector('.category-filter[data-category="all"]');
+            allCategoryFilter.classList.add('active', 'bg-primary', 'text-white');
+            
+            // Price filters
+            document.querySelectorAll('input[name="price"]').forEach(radio => {
+                radio.addEventListener('change', applyFilters);
+            });
+            
+            // Sort dropdown
+            document.getElementById('sort').addEventListener('change', applyFilters);
+            
+            // Checkout button
+            document.getElementById('proceedToCheckoutBtn').addEventListener('click', () => {
+                showPage('checkoutPage');
+                updateCheckoutSummary();
+            });
+            
+            // Complete order button
+            document.getElementById('completeOrderBtn').addEventListener('click', () => {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                
+                if (!firstName || !lastName || !email) {
+                    alert('Veuillez remplir tous les champs obligatoires.');
+                    return;
+                }
+                
+                // Generate random order number
+                const orderNumber = Math.floor(Math.random() * 100000) + 10000;
+                document.getElementById('orderNumber').textContent = `#${orderNumber}`;
+                
+                // Set current date
+                const today = new Date();
+                const dateString = today.toLocaleDateString('fr-FR');
+                document.getElementById('orderDate').textContent = dateString;
+                
+                showPage('confirmationPage');
+            });
+        }
+        
+        // Initialize the app
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
